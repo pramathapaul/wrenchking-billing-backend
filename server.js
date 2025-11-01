@@ -9,7 +9,7 @@ const app = express();
 const corsOptions = {
   origin: [
     'https://thewrenchking-bill.netlify.app',
-    'http://localhost:3000', // For local development
+    'http://localhost:3000',
     'http://127.0.0.1:3000'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -29,12 +29,14 @@ app.use((req, res, next) => {
 });
 
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/billing-app';
+const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+if (!MONGODB_URI) {
+  console.error('❌ MONGODB_URI environment variable is not set');
+  process.exit(1);
+}
+
+mongoose.connect(MONGODB_URI)
 .then(() => console.log('✅ Connected to MongoDB Atlas'))
 .catch(err => {
   console.error('❌ MongoDB connection error:', err);
