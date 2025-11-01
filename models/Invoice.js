@@ -98,6 +98,14 @@ const invoiceSchema = new mongoose.Schema({
     vehicleNumber: {
       type: String,
       trim: true
+    },
+    serviceAtKm: {
+      type: Number,
+      default: null  // Fixed: removed trim for Number
+    },
+    nextServiceAtKm: {
+      type: Number,
+      default: null  // Fixed: removed trim for Number
     }
   },
   items: [itemSchema],
@@ -115,6 +123,18 @@ const invoiceSchema = new mongoose.Schema({
     type: String,
     default: 'INR'
   },
+  discount: {
+    type: {
+      type: String,
+      enum: ['none', 'percentage', 'fixed'],
+      default: 'none'
+    },
+    value: {
+      type: Number,
+      default: 0,
+      min: 0
+    }
+  },
   subtotal: {
     type: Number,
     required: true,
@@ -123,6 +143,11 @@ const invoiceSchema = new mongoose.Schema({
   tax: {
     type: Number,
     required: true,
+    min: 0
+  },
+  discountAmount: {
+    type: Number,
+    default: 0,
     min: 0
   },
   total: {
